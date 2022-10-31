@@ -1,17 +1,29 @@
 <template>
   <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+    <navs/>
+<!--    <pagination/>-->
+<!--    <test/>-->
+<!--    <register/>-->
   </div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+import navs from './components/navs.vue'
+import container from "@/components/container";
+import pagination from "@/components/Pagination";
+import test from "@/components/test";
+import register from "@/components/register";
+import upTop from "@/components/upTop";
 
 export default {
   name: 'App',
   components: {
-    HelloWorld
+    navs,
+    container,
+    pagination,
+    test,
+    register,
+    upTop
   }
 }
 </script>
@@ -23,6 +35,10 @@ export default {
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
-  margin-top: 60px;
+  /*margin-top: 60px;*/
+}
+
+#test {
+
 }
 </style>
