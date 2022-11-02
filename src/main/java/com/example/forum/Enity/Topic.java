@@ -46,4 +46,6 @@ public class Topic {
 
     private int deletes;
 
+    private int deleteRole;
+
 }

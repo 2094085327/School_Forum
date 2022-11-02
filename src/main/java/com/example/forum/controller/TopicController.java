@@ -82,15 +82,15 @@ public class TopicController {
      */
     @RequestMapping("/topic/findByUserId")
     @ResponseBody
-    public IPage<Topic> findByUserId(@RequestParam("userId") String userId, @RequestParam("pageNum") int pageNum, @RequestParam("size") int size, @RequestParam("cId") String cId, @RequestParam("deletes") int deletes) {
+    public IPage<Topic> findByUserId(@RequestParam("userId") String userId, @RequestParam("pageNum") int pageNum, @RequestParam("size") int size, @RequestParam("cId") String cId, @RequestParam("deletes") int deletes,@RequestParam("deleteRole")int deleteRole) {
         Page<Topic> page = new Page<>(pageNum, size);
         String nulls = "全部";
         QueryWrapper<Topic> queryWrapper = Wrappers.query();
         if (nulls.equals(cId)) {
             queryWrapper.eq("user_id", userId).eq("deletes", deletes);
-            queryWrapper.orderByDesc("create_time");
+            queryWrapper.orderByDesc("create_time").eq("delete_role",deleteRole);
         } else {
-            queryWrapper.eq("user_id", userId).eq("c_id", cId).eq("deletes", deletes);
+            queryWrapper.eq("user_id", userId).eq("c_id", cId).eq("deletes", deletes).eq("delete_role",deleteRole);
         }
         return topicMapper.selectPage(page, queryWrapper);
     }
@@ -103,9 +103,9 @@ public class TopicController {
      * @return 返回数据
      */
     @GetMapping("/topic/findById")
-    public List<Topic> findById(@RequestParam("topicId") String topicId, @RequestParam("deletes") int deletes) {
+    public List<Topic> findById(@RequestParam("topicId") String topicId, @RequestParam("deletes") int deletes, @RequestParam int deleteRole) {
         QueryWrapper<Topic> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("id", topicId).eq("deletes", deletes);
+        queryWrapper.eq("id", topicId).eq("deletes", deletes).eq("delete_role", deleteRole);
         return topicMapper.selectList(queryWrapper);
     }
 
@@ -138,6 +138,7 @@ public class TopicController {
         topic.setUpdateTime(LocalDateTime.now());
         topic.setHot(0);
         topic.setDeletes(0);
+        topic.setDeleteRole(1);
         topicMapper.insert(topic);
     }
 
@@ -148,9 +149,9 @@ public class TopicController {
      * @param deletes 删除状态
      */
     @GetMapping("/topic/updateTopic")
-    public void updateTopic(@RequestParam("topicId") String topicId, @RequestParam("deletes") int deletes) {
+    public void updateTopic(@RequestParam("topicId") String topicId, @RequestParam("deletes") int deletes,@RequestParam("deleteRole")int deleteRole) {
         UpdateWrapper<Topic> updateWrapper = new UpdateWrapper<>();
-        updateWrapper.eq("id", topicId).set("deletes", deletes);
+        updateWrapper.eq("id", topicId).set("deletes", deletes).set("delete_role",deleteRole);
         topicMapper.update(null, updateWrapper);
     }
 

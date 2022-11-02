@@ -40,4 +40,6 @@ public class Reply {
     private LocalDateTime updateTime;
 
     private int deletes;
+
+    private int delete_role;
 }

@@ -53,17 +53,17 @@ public class ReplyController {
      * @return 返回查询后的结果
      */
     @GetMapping("/reply/findByPage")
-    public IPage<Reply> findByPage(@RequestParam("pageNum") int pageNum, @RequestParam("size") int size, @RequestParam("topicId") String topicId, @RequestParam("deletes") int deletes) {
+    public IPage<Reply> findByPage(@RequestParam("pageNum") int pageNum, @RequestParam("size") int size, @RequestParam("topicId") String topicId, @RequestParam("deletes") int deletes,@RequestParam("deleteRole")int deleteRole) {
         String nulls = "null";
         Page<Reply> page = new Page<>(pageNum, size);
         QueryWrapper<Reply> queryWrapper = Wrappers.query();
 
         if (nulls.equals(topicId)) {
             // 不查询文章ID
-            queryWrapper.eq("deletes", deletes);
+            queryWrapper.eq("deletes", deletes).eq("delete_role",deleteRole);
         } else {
             // 查询文章ID
-            queryWrapper.eq("topic_id", topicId).eq("deletes", deletes);
+            queryWrapper.eq("topic_id", topicId).eq("deletes", deletes).eq("delete_role",deleteRole);
         }
         return replyMapper.selectPage(page, queryWrapper);
     }
@@ -78,10 +78,10 @@ public class ReplyController {
      * @return 返回查询后的结果
      */
     @GetMapping("/reply/findByUserId")
-    public IPage<Reply> findByUserId(@RequestParam("pageNum") int pageNum, @RequestParam("size") int size, @RequestParam("deletes") int deletes, @RequestParam("userId") String userId) {
+    public IPage<Reply> findByUserId(@RequestParam("pageNum") int pageNum, @RequestParam("size") int size, @RequestParam("deletes") int deletes, @RequestParam("userId") String userId,@RequestParam("deleteRole")int deleteRole) {
         Page<Reply> page = new Page<>(pageNum, size);
         QueryWrapper<Reply> queryWrapper = Wrappers.query();
-        queryWrapper.eq("user_id", userId).eq("deletes", deletes);
+        queryWrapper.eq("user_id", userId).eq("deletes", deletes).eq("delete_role",deleteRole);
         return replyMapper.selectPage(page, queryWrapper);
     }
 
@@ -116,6 +116,7 @@ public class ReplyController {
         reply.setCreateTime(LocalDateTime.now());
         reply.setUpdateTime(LocalDateTime.now());
         reply.setDeletes(0);
+        reply.setDelete_role(1);
 
         replyMapper.insert(reply);
     }
@@ -127,9 +128,9 @@ public class ReplyController {
      * @param deletes 是否删除
      */
     @GetMapping("/reply/updateReply")
-    public void updateReply(@RequestParam("replyId") String replyId, @RequestParam("deletes") Integer deletes) {
+    public void updateReply(@RequestParam("replyId") String replyId, @RequestParam("deletes") Integer deletes, @RequestParam("deleteRole") Integer deleteRole) {
         UpdateWrapper<Reply> updateWrapper = new UpdateWrapper<>();
-        updateWrapper.eq("id", replyId).set("deletes", deletes);
+        updateWrapper.eq("id", replyId).set("deletes", deletes).set("delete_role", deleteRole);
         replyMapper.update(null, updateWrapper);
     }
 }
