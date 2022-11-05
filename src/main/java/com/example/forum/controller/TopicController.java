@@ -82,15 +82,15 @@ public class TopicController {
      */
     @RequestMapping("/topic/findByUserId")
     @ResponseBody
-    public IPage<Topic> findByUserId(@RequestParam("userId") String userId, @RequestParam("pageNum") int pageNum, @RequestParam("size") int size, @RequestParam("cId") String cId, @RequestParam("deletes") int deletes,@RequestParam("deleteRole")int deleteRole) {
+    public IPage<Topic> findByUserId(@RequestParam("userId") String userId, @RequestParam("pageNum") int pageNum, @RequestParam("size") int size, @RequestParam("cId") String cId, @RequestParam("deletes") int deletes, @RequestParam("deleteRole") int deleteRole) {
         Page<Topic> page = new Page<>(pageNum, size);
         String nulls = "全部";
         QueryWrapper<Topic> queryWrapper = Wrappers.query();
         if (nulls.equals(cId)) {
             queryWrapper.eq("user_id", userId).eq("deletes", deletes);
-            queryWrapper.orderByDesc("create_time").eq("delete_role",deleteRole);
+            queryWrapper.orderByDesc("create_time").eq("delete_role", deleteRole);
         } else {
-            queryWrapper.eq("user_id", userId).eq("c_id", cId).eq("deletes", deletes).eq("delete_role",deleteRole);
+            queryWrapper.eq("user_id", userId).eq("c_id", cId).eq("deletes", deletes).eq("delete_role", deleteRole);
         }
         return topicMapper.selectPage(page, queryWrapper);
     }
@@ -129,7 +129,7 @@ public class TopicController {
         topic.setUserId(Integer.parseInt(userId));
 
         QueryWrapper<User> queryWrapper = Wrappers.query();
-        queryWrapper.like("id", userId);
+        queryWrapper.eq("id", userId);
         User user = userMapper.selectOne(queryWrapper);
 
         topic.setUsername(user.getUsername());
@@ -149,9 +149,9 @@ public class TopicController {
      * @param deletes 删除状态
      */
     @GetMapping("/topic/updateTopic")
-    public void updateTopic(@RequestParam("topicId") String topicId, @RequestParam("deletes") int deletes,@RequestParam("deleteRole")int deleteRole) {
+    public void updateTopic(@RequestParam("topicId") String topicId, @RequestParam("deletes") int deletes, @RequestParam("deleteRole") int deleteRole) {
         UpdateWrapper<Topic> updateWrapper = new UpdateWrapper<>();
-        updateWrapper.eq("id", topicId).set("deletes", deletes).set("delete_role",deleteRole);
+        updateWrapper.eq("id", topicId).set("deletes", deletes).set("delete_role", deleteRole);
         topicMapper.update(null, updateWrapper);
     }
 
